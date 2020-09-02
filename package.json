@@ -8,9 +8,11 @@
     "start": "next start"
   },
   "dependencies": {
+    "@types/styled-components": "^5.1.3",
     "next": "9.5.3",
     "react": "16.13.1",
-    "react-dom": "16.13.1"
+    "react-dom": "16.13.1",
+    "styled-components": "^5.1.1"
   },
   "devDependencies": {
     "@t3n/eslint-config": "^5.1.0",
@@ -20,6 +22,7 @@
     "@types/react": "^16.9.49",
     "@typescript-eslint/eslint-plugin": "^3.10.1",
     "@typescript-eslint/parser": "^3.10.1",
+    "babel-plugin-styled-components": "^1.11.1",
     "eslint": "^7.8.1",
     "eslint-config-airbnb": "^18.2.0",
     "eslint-config-airbnb-base": "^14.2.0",
