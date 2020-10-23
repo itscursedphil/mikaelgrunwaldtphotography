@@ -5,7 +5,7 @@ import { space } from 'styled-system';
 export const innerSpace = css`
   ${() =>
     space({
-      px: [3],
-      py: [4],
+      px: [4],
+      py: [5],
     })}
 `;
