@@ -1,24 +1,32 @@
 import React, { createContext } from 'react';
 
-export interface GalleryState {
-  index: number;
-  urls: string[];
+export interface Project {
+  slug: string;
+  label: string;
 }
 
-export const GalleryContext = createContext<GalleryState | undefined>(
+export interface ProjectsState {
+  projects: Project[];
+}
+
+export const ProjectsContext = createContext<ProjectsState | undefined>(
   undefined
 );
 
-const GalleryProvider: React.FC<{ urls: string[]; index: number }> = ({
+const ProjectsProvider: React.FC<{ projects: string[] }> = ({
   children,
-  urls,
-  index,
+  projects: slugs,
 }) => {
+  const projects = slugs.map((slug) => ({
+    slug,
+    label: slug[0].toUpperCase() + slug.substring(1, slug.length),
+  }));
+
   return (
-    <GalleryContext.Provider value={{ index, urls }}>
+    <ProjectsContext.Provider value={{ projects }}>
       {children}
-    </GalleryContext.Provider>
+    </ProjectsContext.Provider>
   );
 };
 
-export default GalleryProvider;
+export default ProjectsProvider;

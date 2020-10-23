@@ -3,9 +3,7 @@ import { CSSTransition } from 'react-transition-group';
 import styled from 'styled-components';
 
 import useGallery from '../../hooks/useGallery';
-import GalleryImage from './GalleryImage';
-
-export const TRANSITION_TIMEOUT = 500;
+import GalleryImage, { TRANSITION_TIMEOUT } from './GalleryImage';
 
 const GalleryContainer = styled.div`
   display: flex;
@@ -40,14 +38,9 @@ const Gallery: React.FC = () => {
     navigateBack,
     navigateForward,
   } = useGallery();
-
+  const [index, setIndex] = useState(transitionIndex);
+  const [transitioning, setTransitioning] = useState(false);
   const [initialized, setInitialized] = useState(false);
-  const [index, setIndex] = useState(!initialized ? transitionIndex : 0);
-  const [transition, setTransition] = useState(false);
-
-  useEffect(() => {
-    if (!initialized) setInitialized(true);
-  }, [initialized]);
 
   useEffect(() => {
     if (hasPrevIndex) fetch(urls[prevIndex]);
@@ -55,17 +48,17 @@ const Gallery: React.FC = () => {
   }, [prevIndex, nextIndex, urls, hasPrevIndex, hasNextIndex]);
 
   useEffect(() => {
-    setTransition(true);
+    setTransitioning(true);
 
     const timeout = setTimeout(() => {
       setIndex(transitionIndex);
-      setTransition(false);
+      setTransitioning(false);
     }, TRANSITION_TIMEOUT);
 
     return () => {
       clearTimeout(timeout);
       setIndex(transitionIndex);
-      setTransition(false);
+      setTransitioning(false);
     };
   }, [transitionIndex]);
 
@@ -73,21 +66,31 @@ const Gallery: React.FC = () => {
     <GalleryContainer>
       <CSSTransition
         in={index === transitionIndex}
-        timeout={{
-          enter: 0,
-          exit: TRANSITION_TIMEOUT,
-        }}
+        appear={!initialized}
+        onEntered={() => setInitialized(true)}
+        timeout={
+          initialized
+            ? {
+                enter: 0,
+                exit: TRANSITION_TIMEOUT,
+              }
+            : {
+                enter: TRANSITION_TIMEOUT * 0.5,
+                exit: 0,
+              }
+        }
       >
         <GalleryImage
           style={{
             backgroundImage: `url(${urls[index]})`,
           }}
-          animateOut
+          appearIn={!initialized}
+          animateOut={initialized}
         />
       </CSSTransition>
       <CSSTransition
-        in={transition}
-        appear={transition}
+        in={transitioning}
+        appear={transitioning}
         mountOnEnter
         unmountOnExit
         timeout={{

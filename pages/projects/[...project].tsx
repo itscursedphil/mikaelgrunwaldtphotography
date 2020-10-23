@@ -14,6 +14,7 @@ import animalsData from '../../data/animals.json';
 import cityData from '../../data/city.json';
 import natureData from '../../data/nature.json';
 import peopleData from '../../data/people.json';
+import ProjectsProvider from '../../lib/projectsContext';
 
 interface ProjectsData {
   animals: string[];
@@ -61,12 +62,14 @@ const ProjectsPage: React.FC<ProjectsPageProps> = ({
         <title>Mikael Grundwaldt Photography</title>
       </Head>
       <Layout>
-        <GalleryProvider urls={urls} index={index}>
-          <Menu />
-          <Content>
-            <Gallery />
-          </Content>
-        </GalleryProvider>
+        <ProjectsProvider projects={projects}>
+          <GalleryProvider urls={urls} index={index}>
+            <Menu />
+            <Content>
+              <Gallery />
+            </Content>
+          </GalleryProvider>
+        </ProjectsProvider>
       </Layout>
     </div>
   );

@@ -1,6 +1,9 @@
 import React from 'react';
 import styled from 'styled-components';
 import { space } from 'styled-system';
+import useProjects from '../../hooks/useProjects';
+
+import { Project } from '../../lib/projectsContext';
 
 interface NavigationItem {
   to: string;
@@ -8,38 +11,26 @@ interface NavigationItem {
   items?: NavigationItem[];
 }
 
-const navigationItems: NavigationItem[] = [
-  {
-    to: '#',
-    label: 'Portfolio',
-  },
-  {
-    to: '#',
-    label: 'Projects',
-    items: [
-      {
-        to: '#',
-        label: 'Lorem',
-      },
-      {
-        to: '#',
-        label: 'Ipsum',
-      },
-      {
-        to: '#',
-        label: 'Dolor',
-      },
-      {
-        to: '#',
-        label: 'Sit Amet',
-      },
-    ],
-  },
-  {
-    to: '#',
-    label: 'About',
-  },
-];
+const createNavigationItems = (projects: Project[]): NavigationItem[] => {
+  return [
+    {
+      to: '#',
+      label: 'Portfolio',
+    },
+    {
+      to: '/projects',
+      label: 'Projects',
+      items: projects.map(({ label, slug }) => ({
+        to: `/projects/${slug}/1`,
+        label,
+      })),
+    },
+    {
+      to: '#',
+      label: 'About',
+    },
+  ];
+};
 
 const NavigationContainer = styled.nav``;
 
@@ -80,29 +71,35 @@ const NavigationListItem = styled.li`
   }
 `;
 
-const Navigation: React.FC = () => (
-  <NavigationContainer>
-    <NavigationList>
-      {navigationItems.map(({ to, label, items }) => (
-        <NavigationListItem key={label}>
-          <a href={to} title={label}>
-            <span>{label}</span>
-          </a>
-          {items && (
-            <NavigationList>
-              {items.map((item) => (
-                <NavigationListItem key={item.label}>
-                  <a href={item.to} title={item.label}>
-                    <span>{item.label}</span>
-                  </a>
-                </NavigationListItem>
-              ))}
-            </NavigationList>
-          )}
-        </NavigationListItem>
-      ))}
-    </NavigationList>
-  </NavigationContainer>
-);
+const Navigation: React.FC = () => {
+  const { projects } = useProjects();
+
+  const navigationItems = createNavigationItems(projects);
+
+  return (
+    <NavigationContainer>
+      <NavigationList>
+        {navigationItems.map(({ to, label, items }) => (
+          <NavigationListItem key={label}>
+            <a href={to} title={label}>
+              <span>{label}</span>
+            </a>
+            {items && (
+              <NavigationList>
+                {items.map((item) => (
+                  <NavigationListItem key={item.label}>
+                    <a href={item.to} title={item.label}>
+                      <span>{item.label}</span>
+                    </a>
+                  </NavigationListItem>
+                ))}
+              </NavigationList>
+            )}
+          </NavigationListItem>
+        ))}
+      </NavigationList>
+    </NavigationContainer>
+  );
+};
 
 export default Navigation;
