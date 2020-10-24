@@ -36,11 +36,15 @@ const GalleryOverview: React.FC<{ urls: Photo[]; project: string }> = ({
     <ContentOverlay hash="#gallery">
       <Container>
         <GridContainer>
-          {urls.map(({ small }, i) => (
+          {urls.map(({ small, full }, i) => (
             <GridItem>
-              <Link href={`/projects/${project}/${i + 1}`}>
+              <Link href={`/projects/${project}/${i + 1}`} prefetch>
                 {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
-                <a title={`Photo ${i + 1}`}>
+                <a
+                  title={`Photo ${i + 1}`}
+                  onMouseOver={() => fetch(full)}
+                  onFocus={() => fetch(full)}
+                >
                   {/* eslint-disable-next-line jsx-a11y/img-redundant-alt */}
                   <img src={small} alt={`Photo ${i + 1}`} />
                 </a>
