@@ -9,6 +9,8 @@ export interface GalleryState {
   hasNextIndex: boolean;
   prevIndex: number;
   nextIndex: number;
+  prevUrl: string;
+  nextUrl: string;
   navigateBack: () => void;
   navigateForward: () => void;
 }
@@ -36,10 +38,11 @@ const GalleryProvider: React.FC<{ urls: string[]; index: number }> = ({
   const prevIndex = getPrevIndex(index, urls.length);
   const nextIndex = getNextIndex(index, urls.length);
 
-  const navigateBack = () =>
-    router.push(`/projects/${project}/${prevIndex + 1}`);
-  const navigateForward = () =>
-    router.push(`/projects/${project}/${nextIndex + 1}`);
+  const prevUrl = `/projects/${project}/${prevIndex + 1}`;
+  const nextUrl = `/projects/${project}/${nextIndex + 1}`;
+
+  const navigateBack = () => router.push('/projects/[...project]', prevUrl);
+  const navigateForward = () => router.push('/projects/[...project]', nextUrl);
 
   return (
     <GalleryContext.Provider
@@ -51,6 +54,8 @@ const GalleryProvider: React.FC<{ urls: string[]; index: number }> = ({
         hasNextIndex,
         prevIndex,
         nextIndex,
+        prevUrl,
+        nextUrl,
         navigateBack,
         navigateForward,
       }}

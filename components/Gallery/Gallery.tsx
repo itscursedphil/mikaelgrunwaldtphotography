@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { CSSTransition } from 'react-transition-group';
 import styled from 'styled-components';
 
@@ -61,6 +61,27 @@ const Gallery: React.FC = () => {
       setTransitioning(false);
     };
   }, [transitionIndex]);
+
+  const handleKeyEvent = useCallback(
+    (e: KeyboardEvent) => {
+      switch (e.key) {
+        case 'ArrowLeft':
+          navigateBack();
+          break;
+        case 'ArrowRight':
+          navigateForward();
+          break;
+        default:
+      }
+    },
+    [navigateBack, navigateForward]
+  );
+
+  useEffect(() => {
+    window.addEventListener('keyup', handleKeyEvent);
+
+    return () => window.removeEventListener('keyup', handleKeyEvent);
+  }, [handleKeyEvent]);
 
   return (
     <GalleryContainer>

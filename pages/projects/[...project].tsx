@@ -15,6 +15,7 @@ import cityData from '../../data/city.json';
 import natureData from '../../data/nature.json';
 import peopleData from '../../data/people.json';
 import ProjectsProvider from '../../lib/projectsContext';
+import GalleryNavigation from '../../components/GalleryNavigation';
 
 interface ProjectsData {
   animals: string[];
@@ -57,21 +58,23 @@ const ProjectsPage: React.FC<ProjectsPageProps> = ({
   projects,
 }) => {
   return (
-    <div>
-      <Head>
-        <title>Mikael Grundwaldt Photography</title>
-      </Head>
-      <Layout>
-        <ProjectsProvider projects={projects}>
-          <GalleryProvider urls={urls} index={index}>
-            <Menu />
+    <ProjectsProvider projects={projects}>
+      <GalleryProvider urls={urls} index={index}>
+        <>
+          <Head>
+            <title>Mikael Grundwaldt Photography</title>
+          </Head>
+          <Layout>
+            <Menu>
+              <GalleryNavigation />
+            </Menu>
             <Content>
               <Gallery />
             </Content>
-          </GalleryProvider>
-        </ProjectsProvider>
-      </Layout>
-    </div>
+          </Layout>
+        </>
+      </GalleryProvider>
+    </ProjectsProvider>
   );
 };
 
