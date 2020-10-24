@@ -6,7 +6,7 @@ const Home: React.FC = () => null;
 export const getServerSideProps = ({ res }: NextPageContext): any => {
   if (res) {
     res.writeHead(302, {
-      Location: 'projects/people/1',
+      Location: 'projects/people',
     });
     res.end();
   }

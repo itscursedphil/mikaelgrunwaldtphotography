@@ -9,27 +9,10 @@ import { GetStaticPaths, GetStaticProps } from 'next';
 import Menu from '../../components/Menu';
 import Gallery from '../../components/Gallery';
 import { innerSpace } from '../../lib/styles';
+import projectsData, { ProjectsData, Photo } from '../../data';
 import GalleryProvider from '../../lib/galleryContext';
-import animalsData from '../../data/animals.json';
-import cityData from '../../data/city.json';
-import natureData from '../../data/nature.json';
-import peopleData from '../../data/people.json';
 import ProjectsProvider from '../../lib/projectsContext';
 import GalleryNavigation from '../../components/GalleryNavigation';
-
-interface ProjectsData {
-  animals: string[];
-  city: string[];
-  nature: string[];
-  people: string[];
-}
-
-const projectsData: ProjectsData = {
-  animals: animalsData,
-  city: cityData,
-  nature: natureData,
-  people: peopleData,
-};
 
 const Layout = styled.div`
   width: 100%;
@@ -48,7 +31,7 @@ const Content = styled.main`
 `;
 
 interface ProjectsPageProps {
-  urls: string[];
+  urls: Photo[];
   index: number;
   projects: string[];
 }

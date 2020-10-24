@@ -4,6 +4,7 @@ import styled from 'styled-components';
 
 import useGallery from '../../hooks/useGallery';
 import GalleryInfo from '../GalleryInfo';
+import GalleryOverview from '../GalleryOverview';
 import GalleryImage, { TRANSITION_TIMEOUT } from './GalleryImage';
 
 const GalleryContainer = styled.div`
@@ -31,6 +32,7 @@ const GalleryNextOverlay = styled.div`
 const Gallery: React.FC = () => {
   const {
     urls,
+    project,
     index: transitionIndex,
     hasPrevIndex,
     hasNextIndex,
@@ -44,8 +46,8 @@ const Gallery: React.FC = () => {
   const [initialized, setInitialized] = useState(false);
 
   useEffect(() => {
-    if (hasPrevIndex) fetch(urls[prevIndex]);
-    if (hasNextIndex) fetch(urls[nextIndex]);
+    if (hasPrevIndex) fetch(urls[prevIndex].full);
+    if (hasNextIndex) fetch(urls[nextIndex].full);
   }, [prevIndex, nextIndex, urls, hasPrevIndex, hasNextIndex]);
 
   useEffect(() => {
@@ -104,7 +106,7 @@ const Gallery: React.FC = () => {
       >
         <GalleryImage
           style={{
-            backgroundImage: `url(${urls[index]})`,
+            backgroundImage: `url(${urls[index].full})`,
           }}
           appearIn={!initialized}
           animateOut={initialized}
@@ -122,7 +124,7 @@ const Gallery: React.FC = () => {
       >
         <GalleryImage
           style={{
-            backgroundImage: `url(${urls[transitionIndex]})`,
+            backgroundImage: `url(${urls[transitionIndex].full})`,
           }}
           animateIn
         />
@@ -130,6 +132,7 @@ const Gallery: React.FC = () => {
       <GalleryPrevOverlay onClick={navigateBack} />
       <GalleryNextOverlay onClick={navigateForward} />
       <GalleryInfo />
+      <GalleryOverview urls={urls} project={project} />
     </GalleryContainer>
   );
 };

@@ -1,8 +1,10 @@
 import React, { createContext } from 'react';
 import { useRouter } from 'next/dist/client/router';
 
+import { Photo } from '../data';
+
 export interface GalleryState {
-  urls: string[];
+  urls: Photo[];
   project: string;
   index: number;
   hasPrevIndex: boolean;
@@ -23,7 +25,7 @@ const getPrevIndex = (index: number, length: number) =>
   (index - 1 + length) % length;
 const getNextIndex = (index: number, length: number) => (index + 1) % length;
 
-const GalleryProvider: React.FC<{ urls: string[]; index: number }> = ({
+const GalleryProvider: React.FC<{ urls: Photo[]; index: number }> = ({
   children,
   urls,
   index,
