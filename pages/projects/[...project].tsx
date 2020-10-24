@@ -1,15 +1,15 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import React from 'react';
+import React, { useEffect } from 'react';
 import Head from 'next/head';
 import styled from 'styled-components';
 import { layout } from 'styled-system';
-
+import { useRouter } from 'next/dist/client/router';
 import { GetStaticPaths, GetStaticProps } from 'next';
+
 import Menu from '../../components/Menu';
 import Gallery from '../../components/Gallery';
 import { innerSpace } from '../../lib/styles';
 import GalleryProvider from '../../lib/galleryContext';
-
 import animalsData from '../../data/animals.json';
 import cityData from '../../data/city.json';
 import natureData from '../../data/nature.json';
@@ -44,6 +44,7 @@ const Content = styled.main`
       width: ['100%'],
     })}
   display: flex;
+  position: relative;
 `;
 
 interface ProjectsPageProps {
@@ -57,6 +58,16 @@ const ProjectsPage: React.FC<ProjectsPageProps> = ({
   index,
   projects,
 }) => {
+  const router = useRouter();
+  const { asPath } = router;
+
+  useEffect(() => {
+    if (asPath.split('/').length < 4)
+      router.push('projects/[...project]', `${router.asPath}/1`, {
+        shallow: true,
+      });
+  }, [asPath, router]);
+
   return (
     <ProjectsProvider projects={projects}>
       <GalleryProvider urls={urls} index={index}>
@@ -83,6 +94,13 @@ export const getStaticPaths: GetStaticPaths<{
 }> = async () => {
   return {
     paths: [
+      ...(Object.keys(projectsData) as Array<keyof ProjectsData>).map(
+        (project) => ({
+          params: {
+            project: [project],
+          },
+        })
+      ),
       ...(Object.keys(projectsData) as Array<keyof ProjectsData>)
         .map((project) =>
           projectsData[project].map((_, i) => ({

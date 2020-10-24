@@ -22,7 +22,7 @@ const createNavigationItems = (projects: Project[]): NavigationItem[] => {
       to: '/projects',
       label: 'Projects',
       items: projects.map(({ label, slug }) => ({
-        to: `/projects/${slug}/1`,
+        to: `/projects/${slug}`,
         label,
       })),
     },

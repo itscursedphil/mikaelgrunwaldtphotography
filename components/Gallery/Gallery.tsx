@@ -3,6 +3,7 @@ import { CSSTransition } from 'react-transition-group';
 import styled from 'styled-components';
 
 import useGallery from '../../hooks/useGallery';
+import GalleryInfo from '../GalleryInfo';
 import GalleryImage, { TRANSITION_TIMEOUT } from './GalleryImage';
 
 const GalleryContainer = styled.div`
@@ -128,6 +129,7 @@ const Gallery: React.FC = () => {
       </CSSTransition>
       <GalleryPrevOverlay onClick={navigateBack} />
       <GalleryNextOverlay onClick={navigateForward} />
+      <GalleryInfo />
     </GalleryContainer>
   );
 };

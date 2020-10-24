@@ -5,8 +5,11 @@ import AppsIcon from '@material-ui/icons/Apps';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import NotesIcon from '@material-ui/icons/Notes';
+import Link from 'next/link';
 
+import { useRouter } from 'next/dist/client/router';
 import useGallery from '../../hooks/useGallery';
+import { getUrlWithToggledHash, getUrlHash } from '../../lib/url';
 
 const Container = styled.div`
   position: absolute;
@@ -24,7 +27,7 @@ const ItemsContainer = styled.div`
   align-items: center;
 `;
 
-const IconLink = styled.a<{ iconSize?: string }>`
+const IconLink = styled.a<{ iconSize?: string; active?: boolean }>`
   color: black;
   line-height: 0;
 
@@ -33,7 +36,7 @@ const IconLink = styled.a<{ iconSize?: string }>`
     height: 0.8em;
     line-height: 0;
     transition: opacity 0.2s ease-in-out;
-    opacity: 0.4;
+    opacity: ${({ active }) => (active ? 1 : 0.4)};
     ${() => space({ mx: 1 })}
   }
 
@@ -57,6 +60,7 @@ const Info = styled.span`
 `;
 
 const GalleryNavigation: React.FC = () => {
+  const router = useRouter();
   const {
     index,
     urls,
@@ -65,40 +69,51 @@ const GalleryNavigation: React.FC = () => {
     navigateBack,
     navigateForward,
   } = useGallery();
+
   return (
     <Container>
       <ItemsContainer>
-        <IconLink
-          href={prevUrl}
-          onClick={(e) => {
-            e.preventDefault();
-            navigateBack();
-          }}
-          title="Previous image"
-        >
-          <ChevronLeftIcon />
-        </IconLink>
+        <Link href={prevUrl} passHref shallow>
+          <IconLink
+            onClick={(e) => {
+              e.preventDefault();
+              navigateBack();
+            }}
+            title="Previous image"
+          >
+            <ChevronLeftIcon />
+          </IconLink>
+        </Link>
         <Info>
           {index + 1} / {urls.length}
         </Info>
-        <IconLink
-          href={nextUrl}
-          onClick={(e) => {
-            e.preventDefault();
-            navigateForward();
-          }}
-          title="Next image"
-        >
-          <ChevronRightIcon />
-        </IconLink>
+        <Link href={nextUrl} passHref shallow>
+          <IconLink
+            onClick={(e) => {
+              e.preventDefault();
+              navigateForward();
+            }}
+            title="Next image"
+          >
+            <ChevronRightIcon />
+          </IconLink>
+        </Link>
       </ItemsContainer>
       <ItemsContainer>
-        <IconLink href="#" title="Open story" iconSize="0.9em">
-          <NotesIcon />
-        </IconLink>
-        <IconLink href="#" title="Open gallery">
-          <AppsIcon />
-        </IconLink>
+        <Link href={getUrlWithToggledHash('#info', router)} shallow passHref>
+          <IconLink
+            title="Open info"
+            iconSize="0.9em"
+            active={getUrlHash() === '#info'}
+          >
+            <NotesIcon />
+          </IconLink>
+        </Link>
+        <Link href={getUrlWithToggledHash('#gallery', router)} shallow passHref>
+          <IconLink title="Open gallery" active={getUrlHash() === '#gallery'}>
+            <AppsIcon />
+          </IconLink>
+        </Link>
       </ItemsContainer>
     </Container>
   );
