@@ -6,11 +6,13 @@ import useGallery from '../../hooks/useGallery';
 import GalleryInfo from '../GalleryInfo';
 import GalleryOverview from '../GalleryOverview';
 import GalleryImage, { TRANSITION_TIMEOUT } from './GalleryImage';
+import useSwipe from '../../hooks/useSwipe';
 
 const GalleryContainer = styled.div`
   display: flex;
   width: 100%;
   position: relative;
+  touch-action: none;
 `;
 
 const GalleryPrevOverlay = styled.div`
@@ -44,6 +46,10 @@ const Gallery: React.FC = () => {
   const [index, setIndex] = useState(transitionIndex);
   const [transitioning, setTransitioning] = useState(false);
   const [initialized, setInitialized] = useState(false);
+  const swipeHandlers = useSwipe({
+    onLeft: navigateForward,
+    onRight: navigateBack,
+  });
 
   useEffect(() => {
     if (hasPrevIndex) fetch(urls[prevIndex].full);
@@ -87,7 +93,7 @@ const Gallery: React.FC = () => {
   }, [handleKeyEvent]);
 
   return (
-    <GalleryContainer>
+    <GalleryContainer {...swipeHandlers}>
       <CSSTransition
         in={index === transitionIndex}
         appear={!initialized}
