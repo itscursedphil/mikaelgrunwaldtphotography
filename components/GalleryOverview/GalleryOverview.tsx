@@ -49,7 +49,7 @@ const GalleryOverview: React.FC<{ urls: Photo[]; project: string }> = ({
                   onFocus={() => fetch(full)}
                 >
                   {/* eslint-disable-next-line jsx-a11y/img-redundant-alt */}
-                  <img src={full} alt={`Photo ${i + 1}`} />
+                  <img src={small} alt={`Photo ${i + 1}`} />
                 </a>
               </Link>
             </GridItem>

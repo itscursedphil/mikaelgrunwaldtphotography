@@ -1,5 +1,5 @@
 import React from 'react';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { space } from 'styled-system';
 import AppsIcon from '@material-ui/icons/Apps';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
@@ -10,6 +10,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/dist/client/router';
 import useGallery from '../../hooks/useGallery';
 import { getUrlWithToggledHash, getUrlHash } from '../../lib/url';
+import { Theme } from '../../theme';
 
 const Container = styled.div`
   position: absolute;
@@ -20,6 +21,53 @@ const Container = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
+
+  &.enter {
+    opacity: 0;
+    transform: translateY(1rem);
+    transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
+
+    &-active,
+    &-done {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  &.exit {
+    opacity: 1;
+    transform: translateY(0);
+    transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
+
+    &-active,
+    &-done {
+      opacity: 0;
+      transform: translateY(1rem);
+    }
+
+    &-done {
+      pointer-events: none;
+      visibility: hidden;
+    }
+  }
+
+  ${({ theme }: { theme: Theme }) => css`
+    @media screen and (min-width: ${theme.breakpoints[1]}) {
+      &,
+      &.enter,
+      &.exit {
+        &,
+        &-active,
+        &-done {
+          transition: all 0s;
+          opacity: 1;
+          transform: translateY(0);
+          pointer-events: auto;
+          visibility: visible;
+        }
+      }
+    }
+  `}
 `;
 
 const ItemsContainer = styled.div`

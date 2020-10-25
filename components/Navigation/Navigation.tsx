@@ -5,6 +5,7 @@ import { space } from 'styled-system';
 import useProjects from '../../hooks/useProjects';
 
 import { Project } from '../../lib/projectsContext';
+import { Theme } from '../../theme';
 
 interface NavigationItem {
   to: string;
@@ -33,7 +34,67 @@ const createNavigationItems = (projects: Project[]): NavigationItem[] => {
   ];
 };
 
-const NavigationContainer = styled.nav``;
+const NavigationContainer = styled.nav`
+  opacity: 0;
+  pointer-events: none;
+  visibility: hidden;
+
+  &.enter {
+    opacity: 0;
+    transform: translateY(-1rem);
+    transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
+
+    &-active,
+    &-done {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    &,
+    &-active,
+    &-done {
+      pointer-events: auto;
+      visibility: visible;
+    }
+  }
+
+  &.exit {
+    opacity: 1;
+    transform: translateY(0);
+    transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
+    pointer-events: auto;
+    visibility: visible;
+
+    &-active,
+    &-done {
+      opacity: 0;
+      transform: translateY(1rem);
+    }
+
+    &-done {
+      pointer-events: none;
+      visibility: hidden;
+    }
+  }
+
+  ${({ theme }: { theme: Theme }) => css`
+    @media screen and (min-width: ${theme.breakpoints[1]}) {
+      &,
+      &.enter,
+      &.exit {
+        &,
+        &-active,
+        &-done {
+          transition: all 0s;
+          opacity: 1;
+          transform: translateY(0);
+          pointer-events: auto;
+          visibility: visible;
+        }
+      }
+    }
+  `}
+`;
 
 const NavigationListItem = styled.li<{ active?: boolean; subItem?: boolean }>`
   font-size: 0.8rem;

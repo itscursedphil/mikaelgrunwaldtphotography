@@ -1,7 +1,9 @@
 import React from 'react';
 import Head from 'next/head';
 import type { AppProps } from 'next/app';
+import { ThemeProvider } from 'styled-components';
 
+import theme from '../theme';
 import GlobalStyle from '../components/GlobalStyle';
 
 const App: React.FC<AppProps> = ({ Component, pageProps }) => (
@@ -13,8 +15,12 @@ const App: React.FC<AppProps> = ({ Component, pageProps }) => (
         rel="stylesheet"
       />
     </Head>
-    <GlobalStyle />
-    <Component {...pageProps} />
+    <ThemeProvider theme={theme}>
+      <>
+        <GlobalStyle />
+        <Component {...pageProps} />
+      </>
+    </ThemeProvider>
   </>
 );
 
