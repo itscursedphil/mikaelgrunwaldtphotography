@@ -11,6 +11,7 @@ const Container = styled.div`
   height: 100%;
   background-color: rgba(255, 255, 255, 0.95);
   overflow-y: auto;
+  overflow-x: hidden;
 
   &.enter {
     opacity: 0;

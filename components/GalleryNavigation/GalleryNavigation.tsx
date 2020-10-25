@@ -59,7 +59,9 @@ const Info = styled.span`
   min-width: 3.5rem;
 `;
 
-const GalleryNavigation: React.FC = () => {
+const GalleryNavigation: React.FC<{ style?: React.CSSProperties }> = ({
+  style,
+}) => {
   const router = useRouter();
   const {
     index,
@@ -71,7 +73,7 @@ const GalleryNavigation: React.FC = () => {
   } = useGallery();
 
   return (
-    <Container>
+    <Container style={style || {}}>
       <ItemsContainer>
         <Link href={prevUrl} passHref shallow>
           <IconLink

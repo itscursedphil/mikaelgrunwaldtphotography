@@ -1,11 +1,11 @@
 import React from 'react';
 import styled from 'styled-components';
-import { space } from 'styled-system';
+import { space, typography } from 'styled-system';
 
 import ContentOverlay from '../ContentOverlay';
 
 const Container = styled.div`
-  ${() => space({ px: [4], py: [4] })}
+  ${() => space({ px: [0, 0, 4], pt: [3, 3, 4], pb: [0, 0, 4] })}
 `;
 
 const TextContainer = styled.div`
@@ -13,8 +13,11 @@ const TextContainer = styled.div`
 `;
 
 const Title = styled.h1`
-  font-size: 1.8em;
-  line-height: 1.4em;
+  ${() =>
+    typography({
+      fontSize: ['1.2em', '1.2em', '1.8em'],
+      lineHeight: ['1.6em', '1.6em', '1.4em'],
+    })}
   margin-top: 0;
 `;
 

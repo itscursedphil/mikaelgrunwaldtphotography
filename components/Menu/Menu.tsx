@@ -1,22 +1,43 @@
 import React, { useState, useRef, useCallback, useEffect } from 'react';
 import styled from 'styled-components';
-import { layout } from 'styled-system';
+import { layout, position, space } from 'styled-system';
+import { Transition } from 'react-transition-group';
 
-import { innerSpace } from '../../lib/styles';
-import Box from '../Box';
 import Navigation from '../Navigation';
 import Title from '../Title';
+import { pointerEvents } from '../../lib/styledSystem';
+import useBreakpoints from '../../hooks/useBreakpoints';
+import Box from '../Box';
+import GalleryNavigation from '../GalleryNavigation';
 
-const MenuContainer = styled.header<{ inactive: boolean }>`
+const MenuContainer = styled.header<{ inactive: boolean; open: boolean }>`
   display: flex;
   flex-direction: row;
-  transition: opacity 0.6s ease-in-out;
-  ${innerSpace}
-  padding-right: 0;
+  transition: opacity 0.6s ease-in-out, background-color 0.5s ease-in-out;
+  z-index: 10;
+  background-color: ${({ open }) =>
+    open ? 'rgba(255, 255, 255, 1)' : 'rgba(255, 255, 255, 0)'};
+  ${() =>
+    space({
+      pl: [4],
+      pr: [4, 4, 0],
+      py: [4, 4, 5],
+    })}
 
   ${() =>
+    position({
+      position: ['fixed', 'fixed', 'relative'],
+      top: [0, 0, 'auto'],
+      left: [0, 0, 'auto'],
+    })}
+  ${() =>
     layout({
-      width: ['280px'],
+      width: ['100%', '100%', '280px'],
+      height: ['100%', '100%', 'inherit'],
+    })}
+  ${({ open }) =>
+    pointerEvents({
+      pointerEvents: open ? 'auto' : ['none', 'none', 'auto'],
     })}
 
   &:not(:hover) {
@@ -24,8 +45,79 @@ const MenuContainer = styled.header<{ inactive: boolean }>`
   }
 `;
 
-const Menu: React.FC = ({ children }) => {
+const InnerContainer = styled.div`
+  width: 100%;
+  position: relative;
+`;
+
+interface TransitionStyles {
+  entering: React.CSSProperties;
+  entered: React.CSSProperties;
+  exiting: React.CSSProperties;
+  exited: React.CSSProperties;
+}
+
+const navTransitionStyles: TransitionStyles = {
+  entering: {
+    opacity: 0,
+    transform: 'translateY(-1rem)',
+    pointerEvents: 'auto',
+    visibility: 'visible',
+  },
+  entered: {
+    opacity: 1,
+    transform: 'translateY(0)',
+    pointerEvents: 'auto',
+    visibility: 'visible',
+  },
+  exiting: {
+    opacity: 0,
+    transform: 'translateY(1rem)',
+    pointerEvents: 'auto',
+    visibility: 'visible',
+  },
+  exited: {
+    opacity: 0,
+    transform: 'translateY(1rem)',
+    pointerEvents: 'none',
+    visibility: 'hidden',
+  },
+};
+
+const galleryNavTransitionStyles: TransitionStyles = {
+  entering: {
+    opacity: 0,
+    transform: 'translateY(1rem)',
+    pointerEvents: 'auto',
+    visibility: 'visible',
+  },
+  entered: {
+    opacity: 1,
+    transform: 'translateY(0)',
+    pointerEvents: 'auto',
+    visibility: 'visible',
+  },
+  exiting: {
+    opacity: 0,
+    transform: 'translateY(1rem)',
+    pointerEvents: 'auto',
+    visibility: 'visible',
+  },
+  exited: {
+    opacity: 0,
+    transform: 'translateY(1rem)',
+    pointerEvents: 'none',
+    visibility: 'hidden',
+  },
+};
+
+const Menu: React.FC = () => {
+  const [open, setOpen] = useState(false);
+  const [initialized, setInitialized] = useState(false);
   const [inactive, setInactive] = useState(false);
+  const { breakpoint } = useBreakpoints();
+
+  const isMobile = breakpoint < 2;
 
   const timeoutRef = useRef<number | undefined>();
   const handleMouseMove = useCallback(() => {
@@ -38,20 +130,65 @@ const Menu: React.FC = ({ children }) => {
   }, []);
 
   useEffect(() => {
-    window.addEventListener('mousemove', handleMouseMove);
+    setInitialized(true);
+  }, []);
+
+  useEffect(() => {
+    if (!isMobile) {
+      window.addEventListener('mousemove', handleMouseMove);
+    } else {
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+      setInactive(false);
+    }
 
     return () => {
       window.removeEventListener('mousemove', handleMouseMove);
     };
-  }, [handleMouseMove]);
+  }, [handleMouseMove, isMobile]);
 
   return (
-    <MenuContainer inactive={inactive}>
-      <Box position="relative" width={1}>
-        <Title />
-        <Navigation inactive={inactive} />
-        {children}
-      </Box>
+    <MenuContainer inactive={inactive} open={open}>
+      <InnerContainer>
+        <Box display="flex" alignItems="center" onClick={() => setOpen(!open)}>
+          <Title />
+        </Box>
+        <Transition in={isMobile ? open : true} timeout={500}>
+          {(state) => (
+            <div
+              style={{
+                ...(initialized && isMobile
+                  ? {
+                      transition:
+                        'opacity 0.5s ease-in-out, transform 0.5s ease-in-out',
+                    }
+                  : {}),
+                ...(initialized && isMobile
+                  ? navTransitionStyles[state as keyof TransitionStyles]
+                  : {}),
+              }}
+            >
+              <Navigation inactive={inactive} />
+            </div>
+          )}
+        </Transition>
+        <Transition in={isMobile ? !open : true} timeout={500}>
+          {(state) => (
+            <GalleryNavigation
+              style={{
+                ...(initialized && isMobile
+                  ? {
+                      transition:
+                        'opacity 0.5s ease-in-out, transform 0.5s ease-in-out',
+                    }
+                  : {}),
+                ...(initialized && isMobile
+                  ? galleryNavTransitionStyles[state as keyof TransitionStyles]
+                  : {}),
+              }}
+            />
+          )}
+        </Transition>
+      </InnerContainer>
     </MenuContainer>
   );
 };

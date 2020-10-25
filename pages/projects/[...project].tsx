@@ -2,13 +2,12 @@
 import React, { useEffect } from 'react';
 import Head from 'next/head';
 import styled from 'styled-components';
-import { layout } from 'styled-system';
+import { layout, space } from 'styled-system';
 import { useRouter } from 'next/dist/client/router';
 import { GetStaticPaths, GetStaticProps } from 'next';
 
 import Menu from '../../components/Menu';
 import Gallery from '../../components/Gallery';
-import { innerSpace } from '../../lib/styles';
 import projectsData, { ProjectsData, Photo } from '../../data';
 import GalleryProvider from '../../lib/galleryContext';
 import ProjectsProvider from '../../lib/projectsContext';
@@ -21,13 +20,18 @@ const Layout = styled.div`
 `;
 
 const Content = styled.main`
-  ${innerSpace}
+  display: flex;
+  position: relative;
+  ${() =>
+    space({
+      px: [4],
+      pt: ['100px', '100px', 5],
+      pb: [5],
+    })}
   ${() =>
     layout({
       width: ['100%'],
     })}
-  display: flex;
-  position: relative;
 `;
 
 interface ProjectsPageProps {
@@ -59,9 +63,7 @@ const ProjectsPage: React.FC<ProjectsPageProps> = ({
             <title>Mikael Grundwaldt Photography</title>
           </Head>
           <Layout>
-            <Menu>
-              <GalleryNavigation />
-            </Menu>
+            <Menu />
             <Content>
               <Gallery />
             </Content>
