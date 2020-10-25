@@ -8,6 +8,10 @@ const GlobalStyle = createGlobalStyle`
     letter-spacing: 0.05em;
   }
 
+  html, body, #__next {
+    height: 100%
+  }
+
   * {
     box-sizing: border-box;
   }
