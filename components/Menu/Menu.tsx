@@ -83,7 +83,14 @@ const Menu: React.FC = () => {
   return (
     <MenuContainer inactive={inactive} open={open}>
       <InnerContainer>
-        <Box display="flex" alignItems="center" onClick={() => setOpen(!open)}>
+        <Box
+          display="flex"
+          alignItems="center"
+          onClick={(e) => {
+            e.preventDefault();
+            setOpen(!open);
+          }}
+        >
           <Title />
         </Box>
         <CSSTransition in={isMobile ? open : true} timeout={500}>
