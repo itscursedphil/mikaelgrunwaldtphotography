@@ -11,7 +11,7 @@ export interface Project {
   photos: Photo[];
 }
 
-const fetchPhotos = async (project: string): Promise<Project> => {
+const fetchProject = async (project: string): Promise<Project> => {
   const queryAmount = Math.round(Math.random() * 30) + 20;
 
   const res = await fetch(
@@ -37,11 +37,38 @@ const fetchPhotos = async (project: string): Promise<Project> => {
   };
 };
 
+const fetchPortfolio = async () => {
+  const queryAmount = Math.round(Math.random() * 30) + 20;
+
+  const res = await fetch(
+    `https://api.pexels.com/v1/curated?per_page=${queryAmount}`,
+    {
+      headers: {
+        Authorization:
+          '563492ad6f917000010000015f0acf7941034c18a1086ea480e4e648',
+      },
+    }
+  );
+
+  const data = await res.json();
+
+  const photos = data.photos.map(({ src }: { src: any }) => ({
+    full: src.large2x,
+    small: src.tiny,
+  }));
+
+  return {
+    name: 'portfolio',
+    photos,
+  };
+};
+
 const fetchProjects = async () => {
-  const projectsWithPhotos = await Promise.all(projectNames.map(fetchPhotos));
+  const projectsWithPhotos = await Promise.all(projectNames.map(fetchProject));
+  const portfolioWithPhotos = await fetchPortfolio();
 
   await Promise.all(
-    projectsWithPhotos.map((project) =>
+    [portfolioWithPhotos, ...projectsWithPhotos].map((project) =>
       fs.writeFile(`data/${project.name}.json`, JSON.stringify(project.photos))
     )
   );

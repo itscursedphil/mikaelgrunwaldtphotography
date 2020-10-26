@@ -1,4 +1,4 @@
-import React, { createContext, useEffect, useRef } from 'react';
+import React, { createContext, useEffect } from 'react';
 import { useRouter } from 'next/dist/client/router';
 
 import { Photo } from '../data';
@@ -25,11 +25,16 @@ const getPrevIndex = (index: number, length: number) =>
   (index - 1 + length) % length;
 const getNextIndex = (index: number, length: number) => (index + 1) % length;
 
-const GalleryProvider: React.FC<{ urls: Photo[]; index: number }> = ({
-  children,
-  urls,
-  index,
-}) => {
+const stripIndexFromUrl = (url: string): string =>
+  url
+    .split('/')
+    .filter((_, i, arr) => i < arr.length - 1)
+    .join('/');
+
+const GalleryProvider: React.FC<{
+  urls: Photo[];
+  index: number;
+}> = ({ children, urls, index }) => {
   const router = useRouter();
 
   const project = router.query?.project?.length ? router.query?.project[0] : '';
@@ -40,11 +45,11 @@ const GalleryProvider: React.FC<{ urls: Photo[]; index: number }> = ({
   const prevIndex = getPrevIndex(index, urls.length);
   const nextIndex = getNextIndex(index, urls.length);
 
-  const prevUrl = `/projects/${project}/${prevIndex + 1}`;
-  const nextUrl = `/projects/${project}/${nextIndex + 1}`;
+  const prevUrl = `${stripIndexFromUrl(router.asPath)}/${prevIndex + 1}`;
+  const nextUrl = `${stripIndexFromUrl(router.asPath)}/${nextIndex + 1}`;
 
-  const navigateBack = () => router.push('/projects/[...project]', prevUrl);
-  const navigateForward = () => router.push('/projects/[...project]', nextUrl);
+  const navigateBack = () => router.push(router.pathname, prevUrl);
+  const navigateForward = () => router.push(router.pathname, nextUrl);
 
   useEffect(() => {
     setTimeout(() => urls.forEach(({ small }) => fetch(small)), 100);
