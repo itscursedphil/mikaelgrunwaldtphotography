@@ -20,8 +20,7 @@ const GridContainer = styled.div`
 const GridItem = styled.div`
   ${() =>
     layout({
-      /* width: ['85px', '85px', '80px'], */
-      height: ['100px', '100px', '80px'],
+      height: ['80px'],
     })}
   ${() => space({ mr: [2, 2, 3], mb: [2, 2, 3] })}
 
