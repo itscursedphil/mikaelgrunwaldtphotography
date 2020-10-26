@@ -1,15 +1,28 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import React from 'react';
+import React, { useEffect } from 'react';
 import { GetStaticPaths, GetStaticProps } from 'next';
+import { useRouter } from 'next/dist/client/router';
 
 import projectsData, { ProjectsData } from '../../data';
 import GalleryPage, {
   GalleryPageProps,
 } from '../../components/GalleryPage/GalleryPage';
 
-const ProjectsPage: React.FC<GalleryPageProps> = (props) => (
-  <GalleryPage {...props} />
-);
+const ProjectsPage: React.FC<GalleryPageProps> = (props) => {
+  const router = useRouter();
+
+  const { urls, projects } = props;
+
+  useEffect(() => {
+    if (!urls.length) {
+      router.push('/projects/[...project]', `/projects/${projects[0]}`);
+    }
+  }, [projects, router, urls.length]);
+
+  if (!urls.length) return null;
+
+  return <GalleryPage {...props} />;
+};
 
 export const getStaticPaths: GetStaticPaths<{
   project: string[];
@@ -32,6 +45,11 @@ export const getStaticPaths: GetStaticPaths<{
           }))
         )
         .reduce((reduced, project) => [...reduced, ...project], []),
+      {
+        params: {
+          project: [],
+        },
+      },
     ],
     fallback: false,
   };
@@ -41,12 +59,14 @@ export const getStaticProps: GetStaticProps<
   GalleryPageProps,
   { project: [string, string] }
 > = async ({ params }) => {
-  if (!params?.project)
+  const projects = Object.keys(projectsData);
+
+  if (!params?.project?.length)
     return {
       props: {
         urls: [],
         index: 0,
-        projects: [],
+        projects,
       },
     };
 
@@ -55,8 +75,6 @@ export const getStaticProps: GetStaticProps<
   const urls = project ? projectsData[project as keyof ProjectsData] : [];
 
   const index = indexString ? parseInt(indexString, 10) - 1 : 0;
-
-  const projects = Object.keys(projectsData);
 
   return {
     props: {
