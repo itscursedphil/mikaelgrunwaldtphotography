@@ -1,4 +1,4 @@
-import React, { createContext } from 'react';
+import React, { createContext, useEffect, useRef } from 'react';
 import { useRouter } from 'next/dist/client/router';
 
 import { Photo } from '../data';
@@ -45,6 +45,10 @@ const GalleryProvider: React.FC<{ urls: Photo[]; index: number }> = ({
 
   const navigateBack = () => router.push('/projects/[...project]', prevUrl);
   const navigateForward = () => router.push('/projects/[...project]', nextUrl);
+
+  useEffect(() => {
+    setTimeout(() => urls.forEach(({ small }) => fetch(small)), 100);
+  }, [urls]);
 
   return (
     <GalleryContext.Provider

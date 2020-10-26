@@ -9,6 +9,7 @@ import { pointerEvents } from '../../lib/styledSystem';
 import useBreakpoints from '../../hooks/useBreakpoints';
 import Box from '../Box';
 import GalleryNavigation from '../GalleryNavigation';
+import MenuIcon from '../MenuIcon';
 
 const MenuContainer = styled.header<{ inactive: boolean; open: boolean }>`
   display: flex;
@@ -85,13 +86,15 @@ const Menu: React.FC = () => {
       <InnerContainer>
         <Box
           display="flex"
-          alignItems="center"
+          justifyContent="space-between"
+          alignItems="flex-start"
           onClick={(e) => {
             e.preventDefault();
             setOpen(!open);
           }}
         >
           <Title />
+          <MenuIcon open={open} />
         </Box>
         <CSSTransition in={isMobile ? open : true} timeout={500}>
           <Navigation inactive={inactive} />

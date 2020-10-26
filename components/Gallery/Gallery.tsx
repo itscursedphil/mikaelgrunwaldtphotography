@@ -52,8 +52,8 @@ const Gallery: React.FC = () => {
   });
 
   useEffect(() => {
-    if (hasPrevIndex) fetch(urls[prevIndex].full);
-    if (hasNextIndex) fetch(urls[nextIndex].full);
+    if (hasPrevIndex) setTimeout(() => fetch(urls[prevIndex].full), 100);
+    if (hasNextIndex) setTimeout(() => fetch(urls[nextIndex].full), 100);
   }, [prevIndex, nextIndex, urls, hasPrevIndex, hasNextIndex]);
 
   useEffect(() => {

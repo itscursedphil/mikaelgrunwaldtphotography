@@ -19,6 +19,7 @@ const Title = styled.h1`
       lineHeight: ['1.6em', '1.6em', '1.4em'],
     })}
   margin-top: 0;
+  font-weight: normal;
 `;
 
 const Paragraph = styled.p`
