@@ -5,7 +5,7 @@ import { space, typography } from 'styled-system';
 import ContentOverlay from '../ContentOverlay';
 
 const Container = styled.div`
-  ${() => space({ px: [0, 0, 4], pt: [3, 3, 4], pb: [0, 0, 4] })}
+  ${() => space({ pt: [4, 4, 0] })}
 `;
 
 const TextContainer = styled.div`
@@ -18,7 +18,7 @@ const Title = styled.h1`
       fontSize: ['1.2em', '1.2em', '1.8em'],
       lineHeight: ['1.6em', '1.6em', '1.4em'],
     })}
-  margin-top: 0;
+  margin-top: -0.25em;
   font-weight: normal;
 `;
 

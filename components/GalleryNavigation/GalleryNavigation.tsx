@@ -13,9 +13,7 @@ import { getUrlWithToggledHash, getUrlHash } from '../../lib/url';
 import { Theme } from '../../theme';
 
 const Container = styled.div`
-  position: absolute;
-  bottom: -0.25em;
-  margin-top: auto;
+  margin-bottom: -0.25em;
   font-size: 0.8rem;
   width: 100%;
   display: flex;

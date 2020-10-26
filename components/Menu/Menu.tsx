@@ -48,7 +48,8 @@ const MenuContainer = styled.header<{ inactive: boolean; open: boolean }>`
 
 const InnerContainer = styled.div`
   width: 100%;
-  position: relative;
+  display: flex;
+  flex-direction: column;
 `;
 
 const Menu: React.FC = () => {

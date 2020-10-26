@@ -31,10 +31,15 @@ const createNavigationItems = (projects: Project[]): NavigationItem[] => {
       to: '/about',
       label: 'About',
     },
+    {
+      to: '/imprint',
+      label: 'Imprint',
+    },
   ];
 };
 
 const NavigationContainer = styled.nav`
+  height: 100%;
   opacity: 0;
   pointer-events: none;
   visibility: hidden;
@@ -153,6 +158,7 @@ const NavigationListItem = styled.li<{ active?: boolean; subItem?: boolean }>`
 `;
 
 const NavigationList = styled.ul`
+  width: 100%;
   margin: 0;
   padding: 0;
   list-style-type: none;
