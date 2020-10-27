@@ -3,8 +3,10 @@ import React from 'react';
 import styled from 'styled-components';
 import { space, layout } from 'styled-system';
 
+import { useRouter } from 'next/dist/client/router';
 import ContentOverlay from '../ContentOverlay';
 import { Photo } from '../../data';
+import { stripIndexFromUrl, stripHashFromUrl } from '../../lib/url';
 
 const Container = styled.div`
   ${() => space({ pr: [0, 0, 2] })}
@@ -30,17 +32,19 @@ const GridItem = styled.div`
   }
 `;
 
-const GalleryOverview: React.FC<{ urls: Photo[]; project: string }> = ({
-  urls,
-  project,
-}) => {
+const GalleryOverview: React.FC<{ urls: Photo[] }> = ({ urls }) => {
+  const { asPath, pathname } = useRouter();
+
   return (
     <ContentOverlay hash="#gallery">
       <Container>
         <GridContainer>
           {urls.map(({ small, full }, i) => (
-            <GridItem>
-              <Link href={`/projects/${project}/${i + 1}`} prefetch>
+            <GridItem key={small}>
+              <Link
+                href={pathname}
+                as={`${stripIndexFromUrl(stripHashFromUrl(asPath))}/${i + 1}`}
+              >
                 {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
                 <a
                   title={`Photo ${i + 1}`}

@@ -109,7 +109,8 @@ const Info = styled.span`
 const GalleryNavigation: React.FC<{ style?: React.CSSProperties }> = ({
   style,
 }) => {
-  const router = useRouter();
+  const { pathname, asPath } = useRouter();
+
   const {
     index,
     urls,
@@ -122,7 +123,7 @@ const GalleryNavigation: React.FC<{ style?: React.CSSProperties }> = ({
   return (
     <Container style={style || {}}>
       <ItemsContainer>
-        <Link href={prevUrl} passHref shallow>
+        <Link href={pathname} as={prevUrl} passHref shallow>
           <IconLink
             onClick={(e) => {
               e.preventDefault();
@@ -136,7 +137,7 @@ const GalleryNavigation: React.FC<{ style?: React.CSSProperties }> = ({
         <Info>
           {index + 1} / {urls.length}
         </Info>
-        <Link href={nextUrl} passHref shallow>
+        <Link href={pathname} as={nextUrl} passHref shallow>
           <IconLink
             onClick={(e) => {
               e.preventDefault();
@@ -149,17 +150,30 @@ const GalleryNavigation: React.FC<{ style?: React.CSSProperties }> = ({
         </Link>
       </ItemsContainer>
       <ItemsContainer>
-        <Link href={getUrlWithToggledHash('#info', router)} shallow passHref>
+        <Link
+          href={pathname}
+          as={getUrlWithToggledHash(asPath, '#info')}
+          shallow
+          passHref
+        >
           <IconLink
             title="Open info"
             iconSize="0.9em"
-            active={getUrlHash() === '#info'}
+            active={getUrlHash(asPath) === '#info'}
           >
             <NotesIcon />
           </IconLink>
         </Link>
-        <Link href={getUrlWithToggledHash('#gallery', router)} shallow passHref>
-          <IconLink title="Open gallery" active={getUrlHash() === '#gallery'}>
+        <Link
+          href={pathname}
+          as={getUrlWithToggledHash(asPath, '#gallery')}
+          shallow
+          passHref
+        >
+          <IconLink
+            title="Open gallery"
+            active={getUrlHash(asPath) === '#gallery'}
+          >
             <AppsIcon />
           </IconLink>
         </Link>

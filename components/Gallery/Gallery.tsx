@@ -34,7 +34,6 @@ const GalleryNextOverlay = styled.div`
 const Gallery: React.FC = () => {
   const {
     urls,
-    project,
     index: transitionIndex,
     hasPrevIndex,
     hasNextIndex,
@@ -138,7 +137,7 @@ const Gallery: React.FC = () => {
       <GalleryPrevOverlay onClick={navigateBack} />
       <GalleryNextOverlay onClick={navigateForward} />
       <GalleryInfo />
-      <GalleryOverview urls={urls} project={project} />
+      <GalleryOverview urls={urls} />
     </GalleryContainer>
   );
 };

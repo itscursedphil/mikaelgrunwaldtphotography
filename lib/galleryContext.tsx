@@ -2,6 +2,7 @@ import React, { createContext, useEffect } from 'react';
 import { useRouter } from 'next/dist/client/router';
 
 import { Photo } from '../data';
+import { stripHashFromUrl, stripIndexFromUrl } from './url';
 
 export interface GalleryState {
   urls: Photo[];
@@ -25,12 +26,6 @@ const getPrevIndex = (index: number, length: number) =>
   (index - 1 + length) % length;
 const getNextIndex = (index: number, length: number) => (index + 1) % length;
 
-const stripIndexFromUrl = (url: string): string =>
-  url
-    .split('/')
-    .filter((_, i, arr) => i < arr.length - 1)
-    .join('/');
-
 const GalleryProvider: React.FC<{
   urls: Photo[];
   index: number;
@@ -45,8 +40,12 @@ const GalleryProvider: React.FC<{
   const prevIndex = getPrevIndex(index, urls.length);
   const nextIndex = getNextIndex(index, urls.length);
 
-  const prevUrl = `${stripIndexFromUrl(router.asPath)}/${prevIndex + 1}`;
-  const nextUrl = `${stripIndexFromUrl(router.asPath)}/${nextIndex + 1}`;
+  const prevUrl = `${stripIndexFromUrl(stripHashFromUrl(router.asPath))}/${
+    prevIndex + 1
+  }`;
+  const nextUrl = `${stripIndexFromUrl(stripHashFromUrl(router.asPath))}/${
+    nextIndex + 1
+  }`;
 
   const navigateBack = () => router.push(router.pathname, prevUrl);
   const navigateForward = () => router.push(router.pathname, nextUrl);
