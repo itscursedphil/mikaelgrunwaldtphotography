@@ -17,7 +17,9 @@ export interface AdminUser {
 
 export interface AdminState {
   user: AdminUser | null;
+  initialized: boolean;
   loginUser: (email: string, password: string) => Promise<AdminUser>;
+  logoutUser: () => void;
 }
 
 export const AdminContext = createContext<AdminState | undefined>(undefined);
@@ -59,10 +61,17 @@ const parseUserFromToken = (token: string): AdminUser | null => {
 };
 
 const AdminProvider: React.FC = ({ children }) => {
+  const [initialized, setInitialized] = useState(false);
   const [user, setUser] = useState<AdminUser | null>(
     parseUserFromToken(retrieveToken())
   );
+  const [userInitialized, setUserInitialized] = useState(false);
   const firebase = useFirebase();
+
+  const resetUser = () => {
+    setUser(null);
+    window.localStorage.removeItem('auth');
+  };
 
   const loginUser = useCallback(
     async (email: string, password: string) => {
@@ -87,16 +96,46 @@ const AdminProvider: React.FC = ({ children }) => {
     [firebase]
   );
 
-  useEffect(() => {
-    firebase.auth().onAuthStateChanged((firebaseUser) => {
-      if (!firebaseUser) {
-        setUser(null);
-      }
-    });
+  const logoutUser = useCallback(() => {
+    resetUser();
+    firebase.auth().signOut();
   }, [firebase]);
 
+  const initializeUser = useCallback(async () => {
+    if (user) {
+      try {
+        const credential = firebase.auth.AuthCredential.fromJSON(
+          decodeToken(user.token)
+        );
+
+        if (credential) {
+          await firebase.auth().signInWithCredential(credential);
+        } else {
+          await firebase.auth().signOut();
+          resetUser();
+        }
+      } catch (err) {
+        // eslint-disable-next-line no-console
+        console.log(err);
+      } finally {
+        setUserInitialized(true);
+      }
+    } else {
+      setUserInitialized(true);
+    }
+  }, [firebase, user]);
+
+  useEffect(() => {
+    if (!initialized) {
+      setInitialized(true);
+      initializeUser();
+    }
+  }, [initializeUser, initialized, user]);
+
   return (
-    <AdminContext.Provider value={{ user, loginUser }}>
+    <AdminContext.Provider
+      value={{ user, loginUser, logoutUser, initialized: userInitialized }}
+    >
       {children}
     </AdminContext.Provider>
   );

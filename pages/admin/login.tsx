@@ -5,10 +5,10 @@ import { space } from 'styled-system';
 import { Button, FormGroup, Label, Input, Spinner, Alert } from 'reactstrap';
 
 import { useRouter } from 'next/dist/client/router';
-import useFirebase from '../../hooks/useFirebase';
 import useAdmin from '../../hooks/useAdmin';
 import Box from '../../components/Box';
 import withAdminPageProviders from '../../lib/withAdminPageProviders';
+import { LoadingPage } from '../../lib/withProtectedPage';
 
 const Container = styled.div`
   width: 100%;
@@ -26,7 +26,7 @@ const Content = styled.div`
 
 const AdminLoginPage: React.FC = () => {
   const router = useRouter();
-  const { user, loginUser } = useAdmin();
+  const { user, loginUser, initialized: userInitialized } = useAdmin();
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -36,6 +36,8 @@ const AdminLoginPage: React.FC = () => {
   useEffect(() => {
     if (user) router.push('/admin');
   }, [user, router]);
+
+  if (!userInitialized) return <LoadingPage />;
 
   return (
     <Container>
