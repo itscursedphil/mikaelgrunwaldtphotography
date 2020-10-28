@@ -1,0 +1,7 @@
+{
+  "public": {
+    "firebase": {
+      "auth": "FIREBASE_AUTH"
+    }
+  }
+}
