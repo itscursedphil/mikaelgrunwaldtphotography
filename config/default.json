@@ -2,6 +2,18 @@
   "public": {
     "firebase": {
       "auth": ""
+    },
+    "imagekit": {
+      "url": "https://ik.imagekit.io/mikaelgrunwaldtphoto",
+      "transforms": {
+        "full": "w-1400,h-1400,c-at_max,q-80",
+        "thumb": "w-200,h-200,c-at_max,q-80"
+      }
+    }
+  },
+  "private": {
+    "imagekit": {
+      "key": ""
     }
   }
 }

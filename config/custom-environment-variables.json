@@ -2,6 +2,18 @@
   "public": {
     "firebase": {
       "auth": "FIREBASE_AUTH"
+    },
+    "imagekit": {
+      "url": "IMAGEKIT_URL",
+      "transforms": {
+        "full": "IMAGEKIT_TRANSFORMS_FULL",
+        "thumb": "IMAGEKIT_TRANSFORMS_THUMB"
+      }
+    }
+  },
+  "private": {
+    "imagekit": {
+      "key": "PRIVATE_IMAGEKIT_KEY"
     }
   }
 }

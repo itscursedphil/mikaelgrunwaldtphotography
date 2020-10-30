@@ -14,6 +14,7 @@ import MenuIcon from '../MenuIcon';
 const MenuContainer = styled.header<{ inactive: boolean; open: boolean }>`
   display: flex;
   flex-direction: row;
+  flex-shrink: 0;
   transition: opacity 0.6s ease-in-out, background-color 0.5s ease-in-out;
   z-index: 10;
   background-color: ${({ open }) =>
@@ -33,7 +34,7 @@ const MenuContainer = styled.header<{ inactive: boolean; open: boolean }>`
     })}
   ${() =>
     layout({
-      width: ['100%', '100%', '280px'],
+      width: ['100%', '100%', '240px'],
       height: ['100%', '100%', 'inherit'],
     })}
   ${({ open }) =>
