@@ -50,6 +50,16 @@ const GalleryEdit: React.FC = () => {
           value={title}
           onChange={(e) => setTitle(e.currentTarget.value)}
         />
+        {title && (
+          <Box pt={1} opacity={0.4}>
+            Slug:{' '}
+            {title
+              .toLowerCase()
+              .split(' ')
+              .join('-')
+              .replace(/[^A-Za-z0-9-]/g, '')}
+          </Box>
+        )}
       </FormGroup>
       <FormGroup>
         <Label>Beschreibung</Label>

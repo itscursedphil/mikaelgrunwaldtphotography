@@ -9,13 +9,14 @@ import ClearIcon from '@material-ui/icons/Clear';
 import { layout } from 'styled-system';
 import uniqid from 'uniqid';
 import config from 'config';
-import { DndProvider, DragElementWrapper, useDrag, useDrop } from 'react-dnd';
+import { DndProvider, DragElementWrapper } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 
 import { Grid, GridItem } from '../Grid';
 import { GridItemProps } from '../Grid/Grid';
 import Box from '../Box';
 import useAdmin from '../../hooks/useAdmin';
+import { usePhotoDrag, usePhotoDrop } from '../../hooks/usePhotoDragAndDrop';
 
 export interface PhotoFile {
   id: string;
@@ -36,60 +37,6 @@ const PhotoGridItem = styled(GridItem)<GridItemProps>`
   position: relative;
   ${() => layout({ mb: 4 })}
 `;
-
-const usePhotoDrag = ({
-  id,
-  url,
-  disable,
-}: {
-  id: string;
-  url: string;
-  disable: boolean;
-}): [{ isDragging: boolean }, DragElementWrapper<any>] => {
-  const [{ isDragging }, drag] = useDrag({
-    item: { type: 'photo', id, url },
-    collect: (monitor) => ({
-      isDragging: !!monitor.isDragging(),
-    }),
-    canDrag: !disable,
-  });
-
-  return [{ isDragging }, drag];
-};
-
-const usePhotoDrop = ({
-  id,
-  onDrop,
-}: {
-  id: string;
-  onDrop: (id: string) => void;
-}): [
-  { isOver: boolean; dropActive: boolean; url?: string },
-  DragElementWrapper<any>
-] => {
-  const [{ isOver, dropActive, url }, drop] = useDrop<
-    { id: string; type: string },
-    any,
-    { isOver: boolean; dropActive: boolean; url: string }
-  >({
-    accept: 'photo',
-    drop: (item) => onDrop(item.id),
-    collect: (monitor) => ({
-      isOver: !!monitor.isOver(),
-      dropActive: !!monitor.getItem() && monitor.getItem().id !== id,
-      url: monitor.getItem()?.url || '',
-    }),
-  });
-
-  return [
-    {
-      isOver,
-      dropActive,
-      url,
-    },
-    drop,
-  ];
-};
 
 const PhotoItemDropArea = styled.div<{ active: boolean; right?: boolean }>`
   position: absolute;
