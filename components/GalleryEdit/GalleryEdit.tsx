@@ -3,7 +3,7 @@ import { Button, Form, FormGroup, Input, Label } from 'reactstrap';
 
 import useFirebase from '../../hooks/useFirebase';
 import Box from '../Box';
-import GalleryEditPhotos, { PhotoFile } from '../Gallery/GalleryEditPhotos';
+import GalleryEditPhotos, { PhotoFile } from './GalleryEditPhotos';
 
 const GalleryEdit: React.FC = () => {
   const firebase = useFirebase();
