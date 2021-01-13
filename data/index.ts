@@ -1,23 +1,29 @@
-import animals from './animals.json';
-import city from './city.json';
-import nature from './nature.json';
-import people from './people.json';
+import ingeg from './ingeg.json';
+import marhabad from './marhabad.json';
+import tanger from './tanger.json';
+import thorup from './thorup.json';
 
 export interface Photo {
   full: string;
   small: string;
 }
 
+export interface Project {
+  title: string;
+  desciption?: string;
+  photos: Photo[];
+}
+
 export interface ProjectsData {
-  animals: Photo[];
-  city: Photo[];
-  nature: Photo[];
-  people: Photo[];
+  ingeg: Project;
+  marhabad: Project;
+  tanger: Project;
+  thorup: Project;
 }
 
 export default {
-  animals,
-  city,
-  nature,
-  people,
+  ingeg,
+  marhabad,
+  tanger,
+  thorup,
 };

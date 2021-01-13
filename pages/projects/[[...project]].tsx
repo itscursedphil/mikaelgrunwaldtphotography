@@ -32,15 +32,15 @@ export const getStaticPaths: GetStaticPaths<{
       ...(Object.keys(projectsData) as Array<keyof ProjectsData>).map(
         (project) => ({
           params: {
-            project: [project],
+            project: [projectsData[project].slug],
           },
         })
       ),
       ...(Object.keys(projectsData) as Array<keyof ProjectsData>)
         .map((project) =>
-          projectsData[project].map((_, i) => ({
+          projectsData[project].photos.map((_, i) => ({
             params: {
-              project: [project, (i + 1).toString()],
+              project: [projectsData[project].slug, (i + 1).toString()],
             },
           }))
         )
@@ -59,11 +59,18 @@ export const getStaticProps: GetStaticProps<
   GalleryPageProps,
   { project: [string, string] }
 > = async ({ params }) => {
-  const projects = Object.keys(projectsData);
+  const projects = (Object.keys(projectsData) as Array<keyof ProjectsData>).map(
+    (key) => {
+      const { title, slug } = projectsData[key];
+
+      return { title, slug };
+    }
+  );
 
   if (!params?.project?.length)
     return {
       props: {
+        title: '',
         urls: [],
         index: 0,
         projects,
@@ -72,12 +79,16 @@ export const getStaticProps: GetStaticProps<
 
   const [project, indexString] = params?.project || [];
 
-  const urls = project ? projectsData[project as keyof ProjectsData] : [];
+  const { photos: urls = [], title = '', description = '' } = project
+    ? projectsData[project as keyof ProjectsData]
+    : {};
 
   const index = indexString ? parseInt(indexString, 10) - 1 : 0;
 
   return {
     props: {
+      title,
+      description,
       urls,
       index,
       projects,

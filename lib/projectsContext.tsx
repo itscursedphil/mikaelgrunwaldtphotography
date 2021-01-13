@@ -13,17 +13,15 @@ export const ProjectsContext = createContext<ProjectsState | undefined>(
   undefined
 );
 
-const ProjectsProvider: React.FC<{ projects: string[] }> = ({
-  children,
-  projects: slugs,
-}) => {
-  const projects = slugs.map((slug) => ({
-    slug,
-    label: slug[0].toUpperCase() + slug.substring(1, slug.length),
-  }));
-
+const ProjectsProvider: React.FC<{
+  projects: { title: string; slug: string }[];
+}> = ({ children, projects }) => {
   return (
-    <ProjectsContext.Provider value={{ projects }}>
+    <ProjectsContext.Provider
+      value={{
+        projects: projects.map(({ title, slug }) => ({ label: title, slug })),
+      }}
+    >
       {children}
     </ProjectsContext.Provider>
   );

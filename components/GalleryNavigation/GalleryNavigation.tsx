@@ -114,6 +114,7 @@ const GalleryNavigation: React.FC<{ style?: React.CSSProperties }> = ({
   const {
     index,
     urls,
+    description,
     prevUrl,
     nextUrl,
     navigateBack,
@@ -150,20 +151,22 @@ const GalleryNavigation: React.FC<{ style?: React.CSSProperties }> = ({
         </Link>
       </ItemsContainer>
       <ItemsContainer>
-        <Link
-          href={pathname}
-          as={getUrlWithToggledHash(asPath, '#info')}
-          shallow
-          passHref
-        >
-          <IconLink
-            title="Open info"
-            iconSize="0.9em"
-            active={getUrlHash(asPath) === '#info'}
+        {description && (
+          <Link
+            href={pathname}
+            as={getUrlWithToggledHash(asPath, '#info')}
+            shallow
+            passHref
           >
-            <NotesIcon />
-          </IconLink>
-        </Link>
+            <IconLink
+              title="Open info"
+              iconSize="0.9em"
+              active={getUrlHash(asPath) === '#info'}
+            >
+              <NotesIcon />
+            </IconLink>
+          </Link>
+        )}
         <Link
           href={pathname}
           as={getUrlWithToggledHash(asPath, '#gallery')}

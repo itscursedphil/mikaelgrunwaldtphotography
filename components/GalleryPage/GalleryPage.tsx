@@ -33,12 +33,20 @@ const Content = styled.main`
 `;
 
 export interface GalleryPageProps {
+  title: string;
   urls: Photo[];
   index: number;
-  projects: string[];
+  description?: string;
+  projects: { title: string; slug: string }[];
 }
 
-const GalleryPage: React.FC<GalleryPageProps> = ({ urls, index, projects }) => {
+const GalleryPage: React.FC<GalleryPageProps> = ({
+  title,
+  urls,
+  index,
+  description,
+  projects,
+}) => {
   const router = useRouter();
   const { asPath, pathname } = router;
 
@@ -51,7 +59,12 @@ const GalleryPage: React.FC<GalleryPageProps> = ({ urls, index, projects }) => {
 
   return (
     <ProjectsProvider projects={projects}>
-      <GalleryProvider urls={urls} index={index}>
+      <GalleryProvider
+        title={title}
+        urls={urls}
+        description={description}
+        index={index}
+      >
         <>
           <Head>
             <title>Mikael Grundwaldt Photography</title>

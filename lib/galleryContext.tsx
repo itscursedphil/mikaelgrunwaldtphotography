@@ -5,8 +5,10 @@ import { Photo } from '../data';
 import { stripHashFromUrl, stripIndexFromUrl } from './url';
 
 export interface GalleryState {
+  title: string;
   urls: Photo[];
   project: string;
+  description?: string;
   index: number;
   hasPrevIndex: boolean;
   hasNextIndex: boolean;
@@ -27,9 +29,11 @@ const getPrevIndex = (index: number, length: number) =>
 const getNextIndex = (index: number, length: number) => (index + 1) % length;
 
 const GalleryProvider: React.FC<{
+  title: string;
   urls: Photo[];
   index: number;
-}> = ({ children, urls, index }) => {
+  description?: string;
+}> = ({ children, title, urls, index, description }) => {
   const router = useRouter();
 
   const project = router.query?.project?.length ? router.query?.project[0] : '';
@@ -57,9 +61,11 @@ const GalleryProvider: React.FC<{
   return (
     <GalleryContext.Provider
       value={{
+        title,
         index,
         urls,
         project,
+        description,
         hasPrevIndex,
         hasNextIndex,
         prevIndex,

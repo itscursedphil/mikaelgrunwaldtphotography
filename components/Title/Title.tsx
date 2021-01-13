@@ -42,7 +42,7 @@ const Subtitle = styled.span`
 const Title: React.FC = () => (
   <StyledTitle>
     <a href="#" title="Mikael Grunwaldt Photography">
-      Mikael Grundwaldt <Subtitle>Photography</Subtitle>
+      Mikael Grunwaldt <Subtitle>Photography</Subtitle>
     </a>
   </StyledTitle>
 );

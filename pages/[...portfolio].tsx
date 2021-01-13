@@ -5,7 +5,7 @@ import { GetStaticPaths, GetStaticProps } from 'next';
 import GalleryPage, {
   GalleryPageProps,
 } from '../components/GalleryPage/GalleryPage';
-import projectsData from '../data';
+import projectsData, { ProjectsData } from '../data';
 import portfolioData from '../data/portfolio.json';
 
 const ProjectsPage: React.FC<GalleryPageProps> = (props) => (
@@ -22,7 +22,7 @@ export const getStaticPaths: GetStaticPaths<{
           portfolio: ['portfolio'],
         },
       },
-      ...portfolioData.map((_, i) => ({
+      ...portfolioData.photos.map((_, i) => ({
         params: {
           portfolio: ['portfolio', (i + 1).toString()],
         },
@@ -39,6 +39,7 @@ export const getStaticProps: GetStaticProps<
   if (!params?.portfolio)
     return {
       props: {
+        title: '',
         urls: [],
         index: 0,
         projects: [],
@@ -47,16 +48,24 @@ export const getStaticProps: GetStaticProps<
 
   const [, indexString] = params?.portfolio || [];
 
-  const urls = portfolioData;
+  const { photos: urls, title, description } = portfolioData;
 
   const index = indexString ? parseInt(indexString, 10) - 1 : 0;
 
-  const projects = Object.keys(projectsData);
+  const projects = (Object.keys(projectsData) as Array<keyof ProjectsData>).map(
+    (key) => {
+      const { title: projectTitle, slug } = projectsData[key];
+
+      return { title: projectTitle, slug };
+    }
+  );
 
   return {
     props: {
+      title,
       urls,
       index,
+      description,
       projects,
     },
   };
