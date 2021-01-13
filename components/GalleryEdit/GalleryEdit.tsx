@@ -5,20 +5,32 @@ import useFirebase from '../../hooks/useFirebase';
 import Box from '../Box';
 import GalleryEditPhotos, { PhotoFile } from './GalleryEditPhotos';
 
-const GalleryEdit: React.FC = () => {
+const GalleryEdit: React.FC<{
+  title?: string;
+  description?: string;
+  photos?: PhotoFile[];
+}> = ({
+  title: initialTitle = '',
+  description: initialDescription = '',
+  photos: initialPhotos = [],
+}) => {
   const firebase = useFirebase();
 
-  const [title, setTitle] = useState('');
-  const [description, setDescription] = useState('');
-  const [photos, setPhotos] = useState<PhotoFile[]>([]);
+  const [title, setTitle] = useState(initialTitle);
+  const [description, setDescription] = useState(initialDescription);
+  const [photos, setPhotos] = useState<PhotoFile[]>(initialPhotos);
+  const [editTitle, setEditTitle] = useState(!initialTitle);
+  const [editDescription, setEditDescription] = useState(!initialDescription);
   const [hasChanges, setHasChanges] = useState(false);
-  const [editTitle, setEditTitle] = useState(false);
-  const [editDescription, setEditDescription] = useState(false);
 
   const formValid = title && description && photos.length > 0;
+  const slug = title
+    .toLowerCase()
+    .split(' ')
+    .join('-')
+    .replace(/[^A-Za-z0-9-]/g, '');
 
   const handleSubmit = async () => {
-    const slug = title.toLowerCase().replace(' ', '-');
     if (formValid) {
       const res = await firebase
         .firestore()
@@ -43,32 +55,31 @@ const GalleryEdit: React.FC = () => {
         handleSubmit();
       }}
     >
-      <FormGroup>
-        <Label>Titel</Label>
-        <Input
-          type="text"
-          value={title}
-          onChange={(e) => setTitle(e.currentTarget.value)}
-        />
-        {title && (
-          <Box pt={1} opacity={0.4}>
-            Slug:{' '}
-            {title
-              .toLowerCase()
-              .split(' ')
-              .join('-')
-              .replace(/[^A-Za-z0-9-]/g, '')}
-          </Box>
-        )}
-      </FormGroup>
-      <FormGroup>
-        <Label>Beschreibung</Label>
-        <Input
-          type="textarea"
-          value={description}
-          onChange={(e) => setDescription(e.currentTarget.value)}
-        />
-      </FormGroup>
+      {editTitle && (
+        <FormGroup>
+          <Label>Titel</Label>
+          <Input
+            type="text"
+            value={title}
+            onChange={(e) => setTitle(e.currentTarget.value)}
+          />
+          {title && (
+            <Box pt={1} opacity={0.4}>
+              Slug: {slug}
+            </Box>
+          )}
+        </FormGroup>
+      )}
+      {editDescription && (
+        <FormGroup>
+          <Label>Beschreibung</Label>
+          <Input
+            type="textarea"
+            value={description}
+            onChange={(e) => setDescription(e.currentTarget.value)}
+          />
+        </FormGroup>
+      )}
       <GalleryEditPhotos photos={photos} onChange={setPhotos} />
       <Box display="flex" justifyContent="flex-end">
         <Button type="submit" color="primary" disabled={!formValid}>
